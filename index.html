@@ -40,16 +40,26 @@
             />
         </div>
 
-        <!-- Elegant Formal Filters -->
-        <div class="border-b border-slate-800/80 mb-12">
-            <nav id="categoryNav" class="-mb-px flex space-x-8 justify-center overflow-x-auto" aria-label="Tabs">
-                <!-- Categories will be injected here via JavaScript -->
-            </nav>
+        <!-- Website Tools Section -->
+        <div id="websiteToolsContainer" class="mb-16">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-8 w-1.5 bg-gradient-to-b from-cyan-400 to-emerald-400 rounded-full"></div>
+                <h2 class="text-2xl font-bold text-white tracking-wide">Website Tools</h2>
+            </div>
+            <div id="websiteToolsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be injected here -->
+            </div>
         </div>
 
-        <!-- Grid Layout -->
-        <div id="toolsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards will be injected here via JavaScript -->
+        <!-- Extension Tools Section -->
+        <div id="extensionToolsContainer" class="mb-16">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-8 w-1.5 bg-gradient-to-b from-cyan-400 to-emerald-400 rounded-full"></div>
+                <h2 class="text-2xl font-bold text-white tracking-wide">Extension Tools</h2>
+            </div>
+            <div id="extensionToolsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be injected here -->
+            </div>
         </div>
 
         <!-- Empty State (Hidden by default) -->
@@ -95,7 +105,7 @@
             {
                 id: 1,
                 category: 'IMAGES',
-                title: 'Mini Image and Logo Editor',
+                title: 'Mini Logo Editor',
                 url: 'https://mini-logo-editor.vercel.app/',
                 image: 'Mini Logo Editor.png'
             },
@@ -112,6 +122,13 @@
                 title: 'Templated image & Duplicate Finder',
                 url: 'https://templated-image-finder.vercel.app/',
                 image: 'Templated Finder.png'
+            },
+            {
+                id: 13,
+                category: 'IMAGES',
+                title: 'Service Image Matcher',
+                url: 'https://service-image-matcher.vercel.app/',
+                image: 'Service Image Matcher.png'
             },
             
             // CONTENT
@@ -150,7 +167,7 @@
                 id: 8,
                 category: 'EXTENSIONS TOOL',
                 title: 'Broken Link Checker',
-                url: 'https://chromewebstore.google.com/detail/website-links-identifier/piejhjjopkmgegoebomlnhfgfbnmcchj',
+                url: '#',
                 description: 'Scans pages to identify and report broken links, ensuring site integrity and SEO health.',
                 iconSvg: '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="m18.84 12.25 1.72-1.71h-.01a5.001 5.001 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="m5.17 11.75-1.71 1.71a5.001 5.001 0 0 0 7.07 7.07l1.71-1.72"></path><line x1="8" x2="8" y1="2" y2="5"></line><line x1="2" x2="5" y1="8" y2="8"></line><line x1="16" x2="16" y1="19" y2="22"></line><line x1="19" x2="22" y1="16" y2="16"></line></svg>'
             },
@@ -188,133 +205,120 @@
             }
         ];
 
-        const categories = ['ALL', 'IMAGES', 'CONTENT', 'EXTENSIONS TOOL'];
-
         // State variables
-        let activeFilter = 'ALL';
         let searchQuery = '';
 
         // DOM Elements
-        const toolsGrid = document.getElementById('toolsGrid');
-        const categoryNav = document.getElementById('categoryNav');
         const searchInput = document.getElementById('searchInput');
         const emptyState = document.getElementById('emptyState');
+        const websiteToolsContainer = document.getElementById('websiteToolsContainer');
+        const websiteToolsGrid = document.getElementById('websiteToolsGrid');
+        const extensionToolsContainer = document.getElementById('extensionToolsContainer');
+        const extensionToolsGrid = document.getElementById('extensionToolsGrid');
 
-        // Function to render category navigation
-        function renderCategories() {
-            categoryNav.innerHTML = '';
-            categories.forEach(category => {
-                const btn = document.createElement('button');
-                btn.textContent = category;
-                
-                // Base classes
-                let classes = 'whitespace-nowrap py-4 px-2 border-b-2 font-medium text-sm tracking-wider transition-colors duration-200 ';
-                
-                // Active/Inactive states
-                if (activeFilter === category) {
-                    classes += 'border-cyan-500 text-cyan-500';
-                } else {
-                    classes += 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-600';
-                }
-                
-                btn.className = classes;
-                btn.onclick = () => {
-                    activeFilter = category;
-                    renderCategories(); // Re-render tabs to update styles
-                    renderTools();      // Re-render tools based on new filter
-                };
-                
-                categoryNav.appendChild(btn);
-            });
+        // Function to generate Card HTML
+        function generateCardHTML(tool) {
+            if (tool.category === 'EXTENSIONS TOOL') {
+                return `
+                    <a 
+                        href="${tool.url}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="group flex flex-col p-6 rounded-2xl border border-transparent bg-gradient-to-br from-cyan-600 to-teal-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-600/30 h-full relative overflow-hidden"
+                    >
+                        <!-- Subtle grain overlay for elegance -->
+                        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] mix-blend-overlay"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="h-[46px] w-[46px] rounded-full bg-black/20 flex items-center justify-center mb-5 group-hover:bg-black/30 transition-colors shadow-sm backdrop-blur-sm">
+                                ${tool.iconSvg}
+                            </div>
+                            <h3 class="text-xl font-extrabold text-white mb-2 drop-shadow-sm">
+                                ${tool.title}
+                            </h3>
+                            <p class="text-[14.5px] text-cyan-50 leading-relaxed font-medium">
+                                ${tool.description}
+                            </p>
+                        </div>
+                    </a>
+                `;
+            } else {
+                return `
+                    <a 
+                        href="${tool.url}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="group flex flex-col rounded-2xl overflow-hidden border border-transparent bg-gradient-to-br from-cyan-600 to-teal-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-600/30 block cursor-pointer h-full relative"
+                    >
+                        <div class="h-56 bg-slate-900 w-full relative overflow-hidden group-hover:opacity-95 transition-opacity duration-300 border-b border-transparent">
+                            <img 
+                                src="${tool.image}" 
+                                alt="${tool.title}" 
+                                class="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow bg-gradient-to-br from-cyan-600 to-teal-600 relative">
+                            <!-- Grain overlay -->
+                            <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] mix-blend-overlay"></div>
+                            
+                            <div class="relative z-10 flex flex-col items-start">
+                                <span class="text-white bg-black/20 px-2.5 py-1 rounded-md text-[0.65rem] font-bold tracking-widest uppercase mb-3 shadow-sm backdrop-blur-sm">
+                                    ${tool.category}
+                                </span>
+                                <h3 class="text-xl font-extrabold text-white drop-shadow-sm">
+                                    ${tool.title}
+                                </h3>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }
         }
 
-        // Function to render tools grid
+        // Function to render tools grids
         function renderTools() {
-            // Filter the data
+            // Filter the data based on search query
             const filteredTools = toolsData.filter(tool => {
-                const matchesFilter = activeFilter === 'ALL' ? true : tool.category === activeFilter;
-                const matchesSearch = tool.title.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchesFilter && matchesSearch;
+                return tool.title.toLowerCase().includes(searchQuery.toLowerCase());
             });
 
-            // Clear current grid
-            toolsGrid.innerHTML = '';
+            // Clear current grids
+            websiteToolsGrid.innerHTML = '';
+            extensionToolsGrid.innerHTML = '';
 
-            // Handle empty state
+            // Handle global empty state
             if (filteredTools.length === 0) {
-                toolsGrid.classList.add('hidden');
+                websiteToolsContainer.classList.add('hidden');
+                extensionToolsContainer.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
             } else {
-                toolsGrid.classList.remove('hidden');
                 emptyState.classList.add('hidden');
             }
 
-            // Generate tool cards
-            filteredTools.forEach(tool => {
-                let cardHTML = '';
+            // Segment tools
+            const websiteTools = filteredTools.filter(t => t.category === 'IMAGES' || t.category === 'CONTENT');
+            const extensionTools = filteredTools.filter(t => t.category === 'EXTENSIONS TOOL');
 
-                if (tool.category === 'EXTENSIONS TOOL') {
-                    // Gradient Elegant Icon-Based Design
-                    cardHTML = `
-                        <a 
-                            href="${tool.url}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="group flex flex-col p-6 rounded-2xl border border-transparent bg-gradient-to-br from-cyan-600 to-teal-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-600/30 h-full relative overflow-hidden"
-                        >
-                            <!-- Subtle grain overlay for elegance (optional, pure CSS) -->
-                            <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] mix-blend-overlay"></div>
-                            
-                            <div class="relative z-10">
-                                <div class="h-[46px] w-[46px] rounded-full bg-black/20 flex items-center justify-center mb-5 group-hover:bg-black/30 transition-colors shadow-sm backdrop-blur-sm">
-                                    ${tool.iconSvg}
-                                </div>
-                                <h3 class="text-xl font-extrabold text-white mb-2 drop-shadow-sm">
-                                    ${tool.title}
-                                </h3>
-                                <p class="text-[14.5px] text-cyan-50 leading-relaxed font-medium">
-                                    ${tool.description}
-                                </p>
-                            </div>
-                        </a>
-                    `;
-                } else {
-                    // Gradient Image-Based Design
-                    cardHTML = `
-                        <a 
-                            href="${tool.url}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="group flex flex-col rounded-2xl overflow-hidden border border-transparent bg-gradient-to-br from-cyan-600 to-teal-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-600/30 block cursor-pointer h-full relative"
-                        >
-                            <div class="h-56 bg-slate-900 w-full relative overflow-hidden group-hover:opacity-95 transition-opacity duration-300 border-b border-transparent">
-                                <img 
-                                    src="${tool.image}" 
-                                    alt="${tool.title}" 
-                                    class="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow bg-gradient-to-br from-cyan-600 to-teal-600 relative">
-                                <!-- Grain overlay -->
-                                <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E')] mix-blend-overlay"></div>
-                                
-                                <div class="relative z-10 flex flex-col items-start">
-                                    <span class="text-white bg-black/20 px-2.5 py-1 rounded-md text-[0.65rem] font-bold tracking-widest uppercase mb-3 shadow-sm backdrop-blur-sm">
-                                        ${tool.category}
-                                    </span>
-                                    <h3 class="text-xl font-extrabold text-white drop-shadow-sm">
-                                        ${tool.title}
-                                    </h3>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                }
-                
-                // Append string as HTML
-                toolsGrid.insertAdjacentHTML('beforeend', cardHTML);
-            });
+            // Render Website Tools
+            if (websiteTools.length > 0) {
+                websiteToolsContainer.classList.remove('hidden');
+                websiteTools.forEach(tool => {
+                    websiteToolsGrid.insertAdjacentHTML('beforeend', generateCardHTML(tool));
+                });
+            } else {
+                websiteToolsContainer.classList.add('hidden');
+            }
+
+            // Render Extension Tools
+            if (extensionTools.length > 0) {
+                extensionToolsContainer.classList.remove('hidden');
+                extensionTools.forEach(tool => {
+                    extensionToolsGrid.insertAdjacentHTML('beforeend', generateCardHTML(tool));
+                });
+            } else {
+                extensionToolsContainer.classList.add('hidden');
+            }
         }
 
         // Event listener for search input
@@ -324,7 +328,6 @@
         });
 
         // Initial Render
-        renderCategories();
         renderTools();
 
     </script>
